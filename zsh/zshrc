@@ -5,7 +5,32 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source ~/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+resolve_config_dir() {
+  local current_file="$1"
+  local symlink_resolved=$(readlink "$current_file")
+  local zsh_dir=$(dirname "$symlink_resolved")
+  local config_dir=$(dirname "$zsh_dir")
+  echo $config_dir
+}
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.zsh/p10k.zsh ]] || source ~/.zsh/p10k.zsh
+export MY_CONFIG=$(resolve_config_dir "${(%):-%N}")
+
+# Use Zinit
+export ZINIT_HOME="$HOME/.zinit"
+source "$MY_CONFIG/zsh/zinit.zsh"
+
+# Settings
+export LC_ALL=en_US.UTF-8
+alias grep="nocorrect ${aliases[grep]:-grep} --color=auto"
+
+export EDITOR="vim"
+export VISUAL="vim"
+export PAGER="less"
+export LESS="-eiMSx2 -RFX"
+export DEFAULT_USER=""
+
+# Alt + Arrow to skip word
+#bindkey -e
+#bindkey '^[[1;9C' forward-word
+#bindkey '^[[1;9D' backward-word
+
