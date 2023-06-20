@@ -5,17 +5,21 @@ set -e
 DOTFILES_DIR=${0:a:h}
 
 init_zsh() {
-    export ZINIT_HOME=$HOME/.zinit
+    ln -sf "$DOTFILES_DIR/zsh" "$HOME/.zsh"
+    ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+    sed -i "s/DEFAULT_USER=\"\"/DEFAULT_USER=\"$USERNAME\"/" "$DOTFILES_DIR/zsh/zshrc"
+}
+
+init_zinit() {
     ZINIT_HOME_REALDIR="$DOTFILES_DIR/zinit"
     git clone https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME_REALDIR
-    ln -sf "$ZINIT_HOME_REALDIR" "$HOME/.zplug"
-    ln -sf "$CONFIG_DIR/zsh" "$HOME/.zsh"
-    ln -sf "$CONFIG_DIR/zsh/zshrc" "$HOME/.zshrc"
-    echo "TODO: zinit install"
+    ln -sf "$ZINIT_HOME_REALDIR" "$HOME/.zinit"
+    export ZINIT_HOME=$HOME/.zinit
 }
 
 init() {
     init_zsh
+    init_zinit
     echo "TODO: Powerlevel 10k install"
 }
 
